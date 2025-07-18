@@ -1,5 +1,4 @@
 using Discord;
-using Discord.Net;
 using Discord.WebSocket;
 using KestrelBot.Extensions;
 
