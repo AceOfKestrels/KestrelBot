@@ -1,5 +1,6 @@
 using Discord;
 using Discord.Net;
+using Discord.Rest;
 using Discord.WebSocket;
 
 namespace KestrelBot.Extensions;
@@ -18,16 +19,18 @@ public static class SendMessageExtensions
             Console.WriteLine(e);
         }
     }
-    public static async Task TrySendMessageAsync(this IMessageChannel channel, string message)
+    public static async Task<IUserMessage?> TrySendMessageAsync(this IMessageChannel channel, string message)
     {
         try
         {
-            await channel.SendMessageAsync(message);
+            return await channel.SendMessageAsync(message);
         }
         catch (HttpException) {}
         catch (Exception e)
         {
             Console.WriteLine(e);
         }
+
+        return null;
     }
 }

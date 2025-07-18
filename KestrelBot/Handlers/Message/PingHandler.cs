@@ -29,10 +29,13 @@ public class PingHandler: MessageHandler
     private async Task PingAll(ISocketMessageChannel channel, SocketUser author)
     {
         _pingCount = 0;
-        var message = await channel.SendMessageAsync($"@everyone Threshold reached by {author.Mention}!");
-        string messageUrl = message.GetJumpUrl();
+        var message = await channel.TrySendMessageAsync($"@everyone Threshold reached by {author.Mention}!");
+        string? messageUrl = message?.GetJumpUrl();
         
-        await channel.SendMessageAsync(
+        if(messageUrl is null)
+            return;
+        
+        await channel.TrySendMessageAsync(
             "https://tenor.com/view/yippee-happy-yippee-creature-yippee-meme-yippee-gif-gif-1489386840712152603");
         
         var users = await channel.GetUsersAsync().FlattenAsync();
