@@ -11,7 +11,10 @@ public class PingHandler: MessageHandler
     
     protected override async Task Handle(SocketMessage message)
     {
-        if (!message.MentionedUsers.Contains(Client.CurrentUser))
+        if(message.Author.IsBot)
+            return;
+        
+        if (!message.MentionedUserIds.Contains(Client.CurrentUser.Id))
             return;
 
         _pingCount++;
