@@ -12,6 +12,7 @@ class Program
     public static async Task Main(string[] args)
     {
         Client.Log += Log;
+        Client.Ready += UnregisterSlashCommands;
         
         string? botToken = Environment.GetEnvironmentVariable("BOT_TOKEN");
         if (string.IsNullOrWhiteSpace(botToken))
@@ -42,5 +43,24 @@ class Program
     {
         T handler = new();
         handler.Init(Client);
+    }
+
+    private static Task UnregisterSlashCommands()
+    {
+        _ = Task.Run(async () =>
+        {
+            try
+            {
+                var guilds = Client.Guilds;
+                foreach (var socketGuild in guilds)
+                    await socketGuild.DeleteApplicationCommandsAsync(RequestOptions.Default);
+                await Client.BulkOverwriteGlobalApplicationCommandsAsync([], RequestOptions.Default);
+            }
+            catch (Exception)
+            {
+                // ignored
+            }
+        });
+        return Task.CompletedTask;
     }
 }
